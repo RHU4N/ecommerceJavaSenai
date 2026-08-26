@@ -1,5 +1,6 @@
 package com.biolab.ecommerce.entities;
 
+import com.biolab.ecommerce.entities.enums.StatusPedido;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,9 +26,5 @@ public class Pedido {
 
     @ManyToOne
     private Usuario cliente;
-
-
-
-
 
 }

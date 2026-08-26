@@ -1,12 +1,11 @@
 package com.biolab.ecommerce.entities;
 
+import com.biolab.ecommerce.entities.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-
-import java.sql.Blob;
 
 //Substitui getter and setter
 @Data
@@ -18,7 +17,7 @@ import java.sql.Blob;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotBlank
     private String nome;
@@ -33,7 +32,7 @@ public class Usuario {
     @Column(nullable = false, length = 150)
     private String senha;
 
-    @NotBlank
-    private String[] roles;
+    @Enumerated(EnumType.STRING)
+    private Role roles;
 
 }
