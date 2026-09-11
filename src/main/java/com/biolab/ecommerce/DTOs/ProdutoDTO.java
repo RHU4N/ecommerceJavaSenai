@@ -1,5 +1,6 @@
 package com.biolab.ecommerce.DTOs;
 
+import com.biolab.ecommerce.entities.Categoria;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -28,4 +30,5 @@ public class ProdutoDTO {
         this.imgUrl = imgUrl;
         this.idCategoria = idCategoria;
     }
+
 }
