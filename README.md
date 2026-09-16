@@ -1,44 +1,18 @@
 # E-commerce Java SENAI
 
-Backend em Java com Spring Boot para estudo de um domínio de e-commerce. O projeto modela usuários, pedidos e os estados do ciclo de um pedido usando Spring Data JPA e MySQL.
+Backend de um sistema de e-commerce desenvolvido em **Java com Spring Boot**, utilizando **Spring Data JPA** e **MySQL**. O projeto foi desenvolvido para fins de estudo e prática de desenvolvimento de APIs REST, modelagem de entidades, relacionamentos JPA, validação de dados e operações CRUD.
 
-## Domínio atual
+## Funcionalidades
 
-### Usuário
+Atualmente, o projeto possui operações REST para:
 
-A entidade `Usuario` representa o cliente ou usuário da loja e possui:
+- Usuários;
+- Pedidos;
+- Pagamentos;
+- Categorias;
+- Produtos.
 
-- `id`;
-- `nome`;
-- `email`;
-- `telefone`;
-- `senha`;
-- `roles`.
-
-O modelo usa validações Jakarta Bean Validation:
-
-- nome, e-mail e senha não podem ficar em branco;
-- e-mail deve ter formato válido;
-- senha deve ter entre 6 e 20 caracteres.
-
-### Pedido
-
-A entidade `Pedido` possui:
-
-- `id`;
-- `momento`, armazenado como `Instant`;
-- `status`, baseado no enum `StatusPedido`;
-- `cliente`, relacionado a `Usuario` com `@ManyToOne`.
-
-Status disponíveis:
-
-```text
-AGUARDANDO_PAGAMENTO
-PAGO
-ENVIADO
-ENTREGUE
-CANCELADO
-```
+O foco atual da atividade é a implementação dos métodos **POST, GET, PUT e DELETE** para produtos e categorias.
 
 ## Tecnologias
 
@@ -57,17 +31,48 @@ CANCELADO
 ```text
 ecommerceJavaSenai/
 ├── pom.xml
-├── mvnw / mvnw.cmd
+├── mvnw
+├── mvnw.cmd
 ├── .env.example
 └── src/
     ├── main/
     │   ├── java/com/biolab/ecommerce/
     │   │   ├── EcommerceApplication.java
-    │   │   └── entities/
-    │   │       ├── Pedido.java
-    │   │       ├── StatusPedido.java
-    │   │       └── Usuario.java
-    │   └── resources/application.properties
+    │   │   ├── controllers/
+    │   │   │   ├── CategoriaController.java
+    │   │   │   ├── PagamentoController.java
+    │   │   │   ├── PedidoController.java
+    │   │   │   ├── ProdutoController.java
+    │   │   │   └── UsuarioController.java
+    │   │   ├── DTOs/
+    │   │   │   ├── CategoriaDTO.java
+    │   │   │   ├── PagamentoDTO.java
+    │   │   │   ├── PedidoDTO.java
+    │   │   │   ├── ProdutoDTO.java
+    │   │   │   └── UsuarioDTO.java
+    │   │   ├── entities/
+    │   │   │   ├── Categoria.java
+    │   │   │   ├── Pagamento.java
+    │   │   │   ├── Pedido.java
+    │   │   │   ├── Produto.java
+    │   │   │   ├── Usuario.java
+    │   │   │   └── enums/
+    │   │   │       ├── Role.java
+    │   │   │       └── StatusPedido.java
+    │   │   ├── repositories/
+    │   │   │   ├── CategoriaRepository.java
+    │   │   │   ├── PagamentoRepository.java
+    │   │   │   ├── PedidoRepository.java
+    │   │   │   ├── ProdutoRepository.java
+    │   │   │   └── UsuarioRepository.java
+    │   │   └── services/
+    │   │       ├── CategoriaService.java
+    │   │       ├── PagamentoService.java
+    │   │       ├── PedidoService.java
+    │   │       ├── ProdutoService.java
+    │   │       └── UsuarioService.java
+    │   └── resources/
+    │       └── application.properties
     └── test/
         └── java/com/biolab/ecommerce/
             └── EcommerceApplicationTests.java
@@ -75,41 +80,51 @@ ecommerceJavaSenai/
 
 ## Requisitos
 
-- JDK 25;
-- MySQL Server;
-- Maven Wrapper, incluído no projeto;
-- IDE com suporte a Spring Boot, como IntelliJ IDEA, Eclipse ou VS Code.
+Antes de executar o projeto, tenha instalado:
 
-## Configuração do banco
+- **JDK 25**;
+- **MySQL Server**;
+- Uma IDE com suporte a Spring Boot, como IntelliJ IDEA, Eclipse ou VS Code.
 
-A aplicação está configurada para usar o banco MySQL `loja` na porta `3306`:
+O projeto possui o **Maven Wrapper**, portanto não é necessário instalar o Maven separadamente.
 
-```text
-URL: jdbc:mysql://localhost:3306/loja
-Porta: 8080
-```
+## Configuração do banco de dados
 
-O Hibernate usa `spring.jpa.hibernate.ddl-auto=update`, podendo criar ou atualizar as tabelas conforme as entidades. Em produção, prefira migrations controladas e não dependa de atualização automática do schema.
+A aplicação utiliza MySQL na porta `3306`. O banco utilizado atualmente é `ecommerce`.
 
-### Atenção às variáveis
-
-O arquivo `application.properties` atualmente espera estas variáveis:
+A URL JDBC pode criar automaticamente o banco caso ele ainda não exista:
 
 ```env
-DB_URL=jdbc:mysql://localhost:3306/loja
+DB_URL=jdbc:mysql://localhost:3306/ecommerce?createDatabaseIfNotExist=true
+```
+
+As credenciais utilizadas pelo `application.properties` são:
+
+```env
+DB_URL=jdbc:mysql://localhost:3306/ecommerce?createDatabaseIfNotExist=true
 db_name=root
 db_pass=sua_senha
 ```
 
-Já o `.env.example` contém `DB_USERNAME` e `DB_PASSWORD`. Esses nomes não são usados diretamente pelo Spring. Ajuste os nomes no ambiente ou no `application.properties` antes de executar:
+O `application.properties` utiliza essas variáveis da seguinte forma:
 
 ```properties
 spring.datasource.url=${DB_URL}
-spring.datasource.username=${DB_USERNAME}
-spring.datasource.password=${DB_PASSWORD}
+spring.datasource.username=${db_name}
+spring.datasource.password=${db_pass}
 ```
 
-Não versione senhas reais ou arquivos `.env`.
+> **Importante:** não versionar o arquivo `.env` com senhas reais. Utilize o `.env.example` como modelo e configure suas credenciais localmente.
+
+### Criação automática das tabelas
+
+O Hibernate está configurado com:
+
+```properties
+spring.jpa.hibernate.ddl-auto=update
+```
+
+Dessa forma, durante o desenvolvimento, o Hibernate pode criar e atualizar as tabelas de acordo com as entidades JPA do projeto.
 
 ## Como executar
 
@@ -125,52 +140,238 @@ Não versione senhas reais ou arquivos `.env`.
 ./mvnw spring-boot:run
 ```
 
-A aplicação será iniciada em:
+A API será iniciada em:
 
 ```text
 http://localhost:8080
 ```
 
-Também é possível abrir o projeto na IDE e executar `EcommerceApplication`.
+Também é possível executar a classe `EcommerceApplication` diretamente pela IDE.
+
+## Endpoints REST
+
+### Categoria
+
+Base URL:
+
+```text
+http://localhost:8080/categoria
+```
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `POST` | `/categoria` | Cadastrar categoria |
+| `GET` | `/categoria` | Listar todas as categorias |
+| `GET` | `/categoria/{id}` | Buscar categoria por ID |
+| `PUT` | `/categoria/{id}` | Atualizar categoria |
+| `DELETE` | `/categoria/{id}` | Excluir categoria |
+
+#### Exemplo — POST Categoria
+
+```json
+{
+  "nome": "Eletrônicos"
+}
+```
+
+#### Exemplo — PUT Categoria
+
+```json
+{
+  "nome": "Informática"
+}
+```
+
+---
+
+### Produto
+
+Base URL:
+
+```text
+http://localhost:8080/produto
+```
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `POST` | `/produto` | Cadastrar produto |
+| `GET` | `/produto` | Listar todos os produtos |
+| `GET` | `/produto/{id}` | Buscar produto por ID |
+| `PUT` | `/produto/{id}` | Atualizar produto |
+| `DELETE` | `/produto/{id}` | Excluir produto |
+
+#### Exemplo — POST Produto
+
+```json
+{
+  "nome": "Notebook Lenovo",
+  "descricao": "Notebook para estudos e trabalho",
+  "preco": 3500.00,
+  "imgUrl": "https://exemplo.com/notebook.jpg",
+  "idCategoria": 1
+}
+```
+
+#### Exemplo — PUT Produto
+
+```json
+{
+  "nome": "Notebook Lenovo IdeaPad",
+  "descricao": "Notebook atualizado para estudos e trabalho",
+  "preco": 3200.00,
+  "imgUrl": "https://exemplo.com/notebook-atualizado.jpg",
+  "idCategoria": 1
+}
+```
+
+> O `idCategoria` deve corresponder a uma categoria existente no banco de dados.
+
+---
+
+### Usuário
+
+Base URL:
+
+```text
+http://localhost:8080/user/
+```
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `POST` | `/user/` | Cadastrar usuário |
+| `GET` | `/user/` | Listar usuários |
+
+### Pedido
+
+Base URL:
+
+```text
+http://localhost:8080/pedido
+```
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `POST` | `/pedido` | Cadastrar pedido |
+| `DELETE` | `/pedido/{id}` | Excluir pedido |
+
+### Pagamento
+
+Base URL:
+
+```text
+http://localhost:8080/pagamento
+```
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `POST` | `/pagamento` | Cadastrar pagamento |
+
+## Testando com Postman
+
+Para validar o CRUD de **Categoria** e **Produto**, recomenda-se seguir esta ordem:
+
+### Categoria
+
+```text
+1. POST   /categoria
+2. GET    /categoria
+3. GET    /categoria/{id}
+4. PUT    /categoria/{id}
+5. GET    /categoria/{id}
+6. DELETE /categoria/{id}
+```
+
+### Produto
+
+Como o produto possui uma relação com categoria, primeiro crie uma categoria e utilize o ID dela no cadastro do produto.
+
+```text
+1. POST   /categoria
+2. POST   /produto
+3. GET    /produto
+4. GET    /produto/{id}
+5. PUT    /produto/{id}
+6. GET    /produto/{id}
+7. DELETE /produto/{id}
+```
+
+No Postman, para requisições com JSON, utilize:
+
+```text
+Body → raw → JSON
+```
+
+E envie o header:
+
+```text
+Content-Type: application/json
+```
 
 ## Build
 
-Windows:
+### Windows
 
 ```powershell
 .\mvnw.cmd clean package
 ```
 
-Linux ou macOS:
+### Linux ou macOS
 
 ```bash
 ./mvnw clean package
 ```
 
-O artefato será gerado em `target/`.
+O arquivo `.jar` será gerado no diretório `target/`.
 
 ## Testes
 
-Execute o teste de carregamento do contexto:
+Execute os testes automatizados com:
+
+### Windows
+
+```powershell
+.\mvnw.cmd test
+```
+
+### Linux ou macOS
 
 ```bash
 ./mvnw test
 ```
 
-No Windows, use `./mvnw.cmd test`.
+## Status do projeto
 
-O projeto possui atualmente um teste básico que verifica se o contexto do Spring Boot é carregado.
+O projeto está em desenvolvimento e possui a estrutura de camadas para uma API REST:
 
-## Estado do projeto
+```text
+Controller → Service → Repository → Database
+```
 
-O repositório contém as entidades e a configuração inicial do domínio. Controllers, repositories e endpoints REST ainda não aparecem na estrutura atual; portanto, o backend ainda não disponibiliza operações HTTP de pedidos ou usuários.
+As funcionalidades de CRUD de **Produto** e **Categoria** estão implementadas com operações de:
+
+- `POST` — criação;
+- `GET` — consulta;
+- `PUT` — atualização;
+- `DELETE` — exclusão.
 
 ## Segurança
 
-- As senhas devem ser armazenadas com hash, nunca em texto puro.
-- Use variáveis de ambiente para credenciais do banco.
-- Revise o mapeamento de `roles` antes de persistir em produção, pois o campo é um array Java sem uma estratégia explícita de conversão JPA no estado atual.
+- Não versionar senhas ou credenciais reais;
+- utilizar variáveis de ambiente para acesso ao banco;
+- armazenar senhas de usuários utilizando hash antes de uma utilização em produção;
+- validar os dados recebidos pela API;
+- em produção, considerar migrations controladas em vez de depender de `ddl-auto=update`.
 
 ## Objetivo
 
-Praticar modelagem de entidades, relacionamentos JPA, enums de domínio, validação de dados e configuração de um projeto Spring Boot conectado ao MySQL.
+O objetivo do projeto é praticar o desenvolvimento de uma aplicação backend utilizando **Java, Spring Boot, JPA, MySQL e APIs REST**, trabalhando conceitos como:
+
+- Modelagem de entidades;
+- Relacionamentos JPA;
+- DTOs;
+- Services e Repositories;
+- Controllers REST;
+- Operações CRUD;
+- Validação de dados;
+- Persistência em banco de dados;
+- Testes com Spring Boot.
