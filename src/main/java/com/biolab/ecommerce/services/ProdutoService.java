@@ -75,8 +75,9 @@ public class ProdutoService {
         return dto;
     }
 
-    public void delete(long id){
+    public String delete(long id){
         produtoRepository.deleteById(id);
+        return "Produto deletado com sucesso!";
     }
 
 }
