@@ -24,9 +24,23 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.salvarPedido(pedido));
     }
 
+    @GetMapping
+    public ResponseEntity<?> getPedido(){
+        return ResponseEntity.ok(pedidoService.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPedidoById(@PathVariable long id){
+        return ResponseEntity.ok(pedidoService.getById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updatePedido(@PathVariable long id, @RequestBody @Valid PedidoDTO pedido) {
+        return ResponseEntity.ok().body(pedidoService.update(id, pedido));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
-        pedidoService.deletarPedido(id);
-        return ResponseEntity.ok("Apagado com sucesso");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(pedidoService.deletarPedido(id));
     }
 }

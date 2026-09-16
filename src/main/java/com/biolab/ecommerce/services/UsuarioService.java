@@ -36,11 +36,36 @@ public class UsuarioService {
             usuarioDTO.setNome(u.getNome());
             usuarioDTO.setEmail(u.getEmail());
             usuarioDTO.setTelefone(u.getTelefone());
-            usuarioDTO.setSenha(u.getSenha());
             usuarioDTO.setRoles(u.getRoles());
             usuarioDTOs.add(usuarioDTO);
         }
         return usuarioDTOs;
+    }
+
+    public UsuarioDTO getUsuario(long id){
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow();
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.setNome(usuario.getNome());
+        usuarioDTO.setEmail(usuario.getEmail());
+        usuarioDTO.setTelefone(usuario.getTelefone());
+        usuarioDTO.setRoles(usuario.getRoles());
+        return usuarioDTO;
+    }
+
+    public UsuarioDTO updateUsuario(long id, UsuarioDTO usuarioDTO){
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow();
+        usuario.setNome(usuarioDTO.getNome());
+        usuario.setEmail(usuarioDTO.getEmail());
+        usuario.setTelefone(usuarioDTO.getTelefone());
+        usuario.setSenha(usuarioDTO.getSenha());
+        usuario.setRoles(usuarioDTO.getRoles());
+        usuarioRepository.save(usuario);
+        return usuarioDTO;
+    }
+
+    public String deleteUsuario(long id){
+        usuarioRepository.deleteById(id);
+        return "Usuario deletado com sucesso!";
     }
 
 }
