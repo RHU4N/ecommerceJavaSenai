@@ -42,6 +42,7 @@ public class ProdutoService {
         List<ProdutoDTO> dtos = new ArrayList<>();
         for (Produto produto : produtos) {
             ProdutoDTO dto = new ProdutoDTO();
+            dto.setId(produto.getId());
             dto.setNome(produto.getNome());
             dto.setDescricao(produto.getDescricao());
             dto.setPreco(produto.getPreco());
@@ -55,6 +56,7 @@ public class ProdutoService {
     public ProdutoDTO findById(long id){
         Produto prod = produtoRepository.findById(id).orElseThrow();
         ProdutoDTO dto = new ProdutoDTO();
+        dto.setId(prod.getId());
         dto.setNome(prod.getNome());
         dto.setDescricao(prod.getDescricao());
         dto.setPreco(prod.getPreco());
@@ -70,7 +72,8 @@ public class ProdutoService {
         prod.setPreco(dto.getPreco());
         prod.setImgUrl(dto.getImgUrl());
         Categoria cat = categoriaRepository.findById(dto.getIdCategoria()).orElseThrow();
-        prod.setCategorias((Set<Categoria>) cat);
+        prod.getCategorias().clear();
+        prod.getCategorias().add(cat);
         produtoRepository.save(prod);
         return dto;
     }
