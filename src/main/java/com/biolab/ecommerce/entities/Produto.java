@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,5 +29,11 @@ public class Produto {
     )
     private Set<Categoria> categorias = new HashSet<>();
 
+    @OneToMany(mappedBy = "id.produto")
+    private Set<ItemDoPedido> itens = new HashSet<>();
+
+    public List<Pedido> getPedidos() {
+        return itens.stream().map(x -> x.getPedido()).toList();
+    }
 
 }
