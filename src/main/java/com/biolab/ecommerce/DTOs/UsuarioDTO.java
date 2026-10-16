@@ -1,9 +1,6 @@
 package com.biolab.ecommerce.DTOs;
 
 import com.biolab.ecommerce.entities.enums.Role;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -18,15 +15,15 @@ public class UsuarioDTO {
     private int id;
     @NotBlank
     private String nome;
-    @NotBlank @Email
+    @NotBlank
+    @Email
     @Size(max = 150)
     private String email;
-    @Size(max = 20, message = "O maximo são 20 chars")
+    @Size(max = 20, message = "O máximo são 20 caracteres")
     private String telefone;
-    @Size(min = 6, max = 20)
+    // Opcional em atualizações; obrigatório no cadastro, validado no service.
+    @Size(min = 6, max = 72)
     private String senha;
-
-    @Enumerated(EnumType.STRING)
     private Role roles;
 
     public UsuarioDTO(String nome, String email, String telefone, String senha, Role roles) {
