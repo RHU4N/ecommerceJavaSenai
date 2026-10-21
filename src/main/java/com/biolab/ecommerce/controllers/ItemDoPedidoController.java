@@ -20,7 +20,7 @@ public class ItemDoPedidoController {
         return ResponseEntity.ok(itemPedidoService.create(dto));
     }
 
-    @DeleteMapping("/{idPedido}/{idProduto")
+    @DeleteMapping("/{idPedido}/{idProduto}")
     public ResponseEntity<?> delete(@PathVariable long idPedido,@PathVariable long idProduto){
         itemPedidoService.Delete(idPedido, idProduto);
         return ResponseEntity.noContent().build();
