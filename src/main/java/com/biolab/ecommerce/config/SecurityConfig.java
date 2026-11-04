@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/user").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user","/auth").permitAll()
                         .requestMatchers(HttpMethod.GET, "/produto", "/produto/**", "/categoria", "/categoria/**").permitAll()
                         // Até implementar validação de propriedade dos recursos, operações
                         // sobre usuários, pedidos e pagamentos ficam apenas com ADMIN.
@@ -42,18 +42,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(UsuarioRepository usuarioRepository) {
-        return email -> {
-            Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email)
-                    .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
-            if (usuario.getRoles() == null) {
-                throw new UsernameNotFoundException("Usuário sem role");
-            }
-            return User.withUsername(usuario.getEmail())
-                    .password(usuario.getSenha())
-                    .roles(usuario.getRoles().name())
-                    .build();
-        };
-    }
 }
